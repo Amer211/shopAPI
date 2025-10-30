@@ -1,7 +1,9 @@
 package com.example.order_service.service;
 
+import com.example.order_service.dto.Customer;
 import com.example.order_service.entity.Order;
 import com.example.order_service.entity.Status;
+import com.example.order_service.feign.CustomerClient;
 import com.example.order_service.repository.OrderRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +19,15 @@ import java.util.UUID;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final CustomerClient customerClient;
 
     public Order saveOrder(Order order){
+        // Fetch customer from customer-service
+        Customer customer = customerClient.getCustomerById(order.getCustomerId());
+        if(customer==null){
+            log.error("customer not found with id{}", order.getCustomerId());
+            throw new RuntimeException("customer not found with id: "+ order.getCustomerId());
+        }
 
         order.setOrderDate(LocalDateTime.now());
         order.setStatus(Status.PENDING);

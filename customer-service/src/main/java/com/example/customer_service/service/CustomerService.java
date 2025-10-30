@@ -27,6 +27,9 @@ public class CustomerService {
     }
 
 
-
-
+    public Customer getCustomerById(Long id) {
+        log.info("fetching customer by id: {}", id);
+        return customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("customer not found with id:"+ id));
+    }
 }

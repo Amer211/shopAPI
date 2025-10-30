@@ -28,6 +28,11 @@ public class CustomerController {
         return customerService.getAllCustomers();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Customer> getCustomerById(@PathVariable Long id){
+        Customer customer = customerService.getCustomerById(id);
+        return ResponseEntity.ok(customer);
+    }
 
 
 }
